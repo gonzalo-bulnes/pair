@@ -1,0 +1,5 @@
+  language: go
+  go:
+    - "1.10"
+  install: "make install-for-testing"
+  script: "make test"
