@@ -24,7 +24,7 @@ func main() {
 	home := os.Getenv("HOME")
 	template := fmt.Sprintf("%s/.pair", home)
 
-	err := checkArgs()
+	err := checkArgs(os.Args)
 	if e, ok := err.(*argumentsError); ok {
 		fmt.Println(e)
 		return
@@ -51,11 +51,11 @@ func main() {
 	}
 }
 
-func checkArgs() error {
-	if len(os.Args) == 3 && os.Args[1] == "with" {
+func checkArgs(args []string) error {
+	if len(args) == 3 && args[1] == "with" {
 		return nil
 	}
-	if len(os.Args) == 2 && os.Args[1] == "stop" {
+	if len(args) == 2 && args[1] == "stop" {
 		return nil
 	}
 	return &argumentsError{}
