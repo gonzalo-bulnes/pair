@@ -10,8 +10,9 @@ func TestCheckArgs(t *testing.T) {
 			Description string
 			Args        []string
 		}{
-			{"missing command", []string{"pair"}},
+			{"missing command or option", []string{"pair"}},
 			{"unknown command", []string{"pair", "roneous"}},
+			{"too many arguments for '--version' option", []string{"pair", "--version", "now"}},
 			{"too many arguments for 'with' command", []string{"pair", "with", "mutiple", "people"}},
 			{"not enough arguments for 'with' command", []string{"pair", "with"}},
 			{"too many arguments for 'stop' command", []string{"pair", "stop", "now"}},
@@ -31,6 +32,7 @@ func TestCheckArgs(t *testing.T) {
 			Description string
 			Args        []string
 		}{
+			{"'--version' option", []string{"pair", "--version"}},
 			{"'with' command", []string{"pair", "with", "me"}},
 			{"'stop' command", []string{"pair", "stop"}},
 		}

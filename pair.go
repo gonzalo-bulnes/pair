@@ -7,6 +7,8 @@ import (
 	"os/exec"
 )
 
+const Version = "0.1.0"
+
 type config struct {
 	templateName string
 	pair         string
@@ -27,10 +29,13 @@ func main() {
 	err := checkArgs(os.Args)
 	if e, ok := err.(*argumentsError); ok {
 		fmt.Println(e)
-		return
+		os.Exit(1)
 	}
 
 	switch os.Args[1] {
+	case "--version":
+		fmt.Printf("%s\n", version())
+		os.Exit(0)
 	case "with":
 		err := configureGit(template)
 		if err != nil {
@@ -56,6 +61,9 @@ func checkArgs(args []string) error {
 		return nil
 	}
 	if len(args) == 2 && args[1] == "stop" {
+		return nil
+	}
+	if len(args) == 2 && args[1] == "--version" {
 		return nil
 	}
 	return &argumentsError{}
@@ -101,4 +109,8 @@ func unconfigureGit() error {
 	cmd := exec.Command("git", "config", "--global", "--unset", "commit.template")
 	_ = cmd.Run()
 	return nil
+}
+
+func version() string {
+	return fmt.Sprintf("pair version %s", Version)
 }
