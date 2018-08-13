@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 )
@@ -28,7 +27,7 @@ func main() {
 
 	err := checkArgs(os.Args)
 	if e, ok := err.(*argumentsError); ok {
-		fmt.Println(e)
+		fmt.Fprint(os.Stderr, e)
 		os.Exit(1)
 	}
 
@@ -39,18 +38,18 @@ func main() {
 	case "with":
 		err := configureGit(template)
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 		pair := os.Args[2]
 		overwrite(template, fmt.Sprintf("\n\nCo-Authored-By: %s\n", pair))
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 	case "stop":
 		_ = remove(template)
 		err := unconfigureGit()
 		if err != nil {
-			log.Fatal(err)
+			return
 		}
 	default:
 	}
@@ -69,40 +68,40 @@ func checkArgs(args []string) error {
 	return &argumentsError{}
 }
 
-func configureGit(template string) error {
-	err := unconfigureGit()
+func configureGit(template string) (err error) {
+	err = unconfigureGit()
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
 	cmd := exec.Command("git", "config", "--global", "--add", "commit.template", template)
 	err = cmd.Run()
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
-	return nil
+	return
 }
 
-func overwrite(template, pair string) error {
+func overwrite(template, pair string) (err error) {
 	_ = remove(template)
 	f, err := os.OpenFile(template, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
-	if _, err := f.Write([]byte(pair)); err != nil {
-		log.Fatal(err)
+	if _, err = f.Write([]byte(pair)); err != nil {
+		return
 	}
-	if err := f.Close(); err != nil {
-		log.Fatal(err)
+	if err = f.Close(); err != nil {
+		return
 	}
-	return nil
+	return
 }
 
-func remove(template string) error {
-	err := os.Remove(template)
+func remove(template string) (err error) {
+	err = os.Remove(template)
 	if err != nil {
 		return err
 	}
-	return nil
+	return
 }
 
 func unconfigureGit() error {
