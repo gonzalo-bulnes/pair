@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 const Version = "0.1.0"
@@ -23,7 +24,7 @@ func (e *argumentsError) Error() string {
 
 func main() {
 	home := os.Getenv("HOME")
-	template := fmt.Sprintf("%s/.pair", home)
+	template := filepath.Join(home, ".pair")
 
 	err := checkArgs(os.Args)
 	if e, ok := err.(*argumentsError); ok {
