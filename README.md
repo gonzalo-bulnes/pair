@@ -7,7 +7,7 @@
 
 You love attributing your pairs when [committing together][together]? We all do!
 
-But writing names once an again is repetitive enough that we forget doing it, isn't it?
+But writing names once and again is repetitive enough that we forget doing it, isn't it?
 
 Not anymore! Start your pairing sessions and switch pairs with a simple 🍐 command, while keeping control over your commit messages! Ready to get started?
 
@@ -45,11 +45,11 @@ If you want to compile it from source, try:
 
     $ go get github.com/gonzalo-bulnes/pair
 
-For Unix/Linux users, you can install `pair` using the following command. You may want to change the version number in the command below from `v1.0.0` to whichever version you want:
+For Unix/Linux users, you can install `pair` using the following command. You may want to change the version number in the command below from `v0.1.0` to whichever version you want:
 
 ```
 curl -sL -o /usr/local/bin/pair \
-    https://github.com/gonzalo-bulnes/pair/releases/download/v1.0.0/pair-linux-amd64 \
+    https://github.com/gonzalo-bulnes/pair/releases/download/v0.1.0/pair-linux-amd64 \
  && chmod +x /usr/local/bin/pair
 ```
 
@@ -58,7 +58,7 @@ Credits
 
 The pear emoji in the header was rendered from an SVG that belongs to Google and [was published under the Apache License v2.0 as part of Noto Emoji](https://github.com/googlei18n/noto-emoji).
 
-Thanks to the team behind [`shush`][shush] for your inspiring `README`!
+Thanks to the team behind [`shush`][shush] for their inspiring `README`!
 
   [shush]: https://github.com/realestate-com-au/shush
 
