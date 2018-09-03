@@ -32,6 +32,10 @@ That sounds cool, [how does it work?](./doc/README.md)
 Installation
 ------------
 
+> **DISCLAIMER**: These are still experimental releases. Specifically, they apply Git configuration globally. While the modifications are strictly scoped to `commit.template`, they will disable your current Git commit template if you use one!
+>
+> Please make sure to backup your `~/gitconfig` before using `pair` : )
+
 Binaries for official releases may be downloaded from the [releases page on GitHub](https://github.com/gonzalo-bulnes/pair/releases).
 
 If you want to compile it from source, try:
