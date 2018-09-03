@@ -13,13 +13,6 @@ Not anymore! Start your pairing sessions and switch pairs with a simple 🍐 com
 
   [together]: https://help.github.com/articles/creating-a-commit-with-multiple-authors/
 
-Installation
-------------
-
-_To be defined. ([What is going on here?][rdd])_
-
-  [rdd]: http://tom.preston-werner.com/2010/08/23/readme-driven-development.html
-
 Usage
 -----
 
@@ -36,10 +29,38 @@ pair stop
 
 That sounds cool, [how does it work?](./doc/README.md)
 
+Installation
+------------
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/gonzalo-bulnes/pair)](https://goreportcard.com/report/github.com/gonzalo-bulnes/pair)
+[![Build Status](https://travis-ci.org/gonzalo-bulnes/pair.svg?branch=master)](https://travis-ci.org/gonzalo-bulnes/pair)
+
+> **DISCLAIMER**: These are still experimental releases. Specifically, they apply Git configuration globally. While the modifications are strictly scoped to `commit.template`, they will disable your current Git commit template if you use one!
+>
+> Please make sure to backup your `~/gitconfig` before using `pair` : )
+
+Binaries for official releases may be downloaded from the [releases page on GitHub](https://github.com/gonzalo-bulnes/pair/releases).
+
+If you want to compile it from source, try:
+
+    $ go get github.com/gonzalo-bulnes/pair
+
+For Unix/Linux users, you can install `pair` using the following command. You may want to change the version number in the command below from `v1.0.0` to whichever version you want:
+
+```
+curl -sL -o /usr/local/bin/pair \
+    https://github.com/gonzalo-bulnes/pair/releases/download/v1.0.0/pair-linux-amd64 \
+ && chmod +x /usr/local/bin/pair
+```
+
 Credits
 -------
 
 The pear emoji in the header was rendered from an SVG that belongs to Google and [was published under the Apache License v2.0 as part of Noto Emoji](https://github.com/googlei18n/noto-emoji).
+
+Thanks to the team behind [`shush`][shush] for your inspiring `README`!
+
+  [shush]: https://github.com/realestate-com-au/shush
 
 License
 -------
