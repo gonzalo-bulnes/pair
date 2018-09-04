@@ -2,10 +2,56 @@ package template
 
 import (
 	"bytes"
+	"log"
+	"os"
+	"path/filepath"
 	"testing"
 )
 
 func TestT(t *testing.T) {
+	t.Run("CoAuthor", func(t *testing.T) {
+		testcases := []struct {
+			templatePath string
+			coAuthor     string
+			present      bool
+		}{
+			{
+				"simple.txt",
+				"Alice <alice@example.com>",
+				true,
+			},
+			{
+				"none.txt",
+				"",
+				false,
+			},
+			{
+				"double.txt", // only one co-author is supported
+				"Alice <alice@example.com>",
+				true,
+			},
+		}
+
+		for _, tc := range testcases {
+			tt := New()
+
+			f, err := os.Open(filepath.Join("testdata", tc.templatePath))
+			if err != nil {
+				log.Fatalf("Missing test data: %s", tc.templatePath)
+			}
+			tt.ReadFrom(f)
+
+			coAuthor, present := tt.CoAuthor()
+			if present != tc.present {
+				t.Errorf("Co-author detection failed for %s", tc.templatePath)
+			}
+			if coAuthor != tc.coAuthor {
+				t.Errorf("Expected co-author to be '%s', was '%s'", tc.coAuthor, coAuthor)
+			}
+		}
+
+	})
+
 	t.Run("ReadFrom", func(t *testing.T) {
 		tt := New()
 
