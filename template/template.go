@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"io"
 	"regexp"
+
+	"github.com/gonzalo-bulnes/pair/github"
 )
 
 // T is a template, typically a template used for Git commit messages.
@@ -26,7 +28,7 @@ func (t *T) ReadFrom(r io.Reader) (n int64, err error) {
 // CoAuthor returns the co-author if any. The second return value indicates
 // whether or not a co-author was mentioned in the template.
 func (t *T) CoAuthor() (string, bool) {
-	re := regexp.MustCompile(`[Cc]o-[Aa]uthored-[Bb]y: (.[^\n]*)`)
+	re := regexp.MustCompile(github.CoAuthorRegexp)
 	found := author(re.FindAllStringSubmatch(t.content.String(), 1))
 	if found == nil {
 		return "", false
