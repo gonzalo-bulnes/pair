@@ -2,11 +2,44 @@ package template
 
 import (
 	"bytes"
-	"log"
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
 )
+
+func ExampleT_CoAuthor_present() {
+	tt := New()
+
+	template := `Add secret message
+
+  Co-Authored-By: Alice <alice@example.com>`
+	var buffer bytes.Buffer
+	buffer.WriteString(template)
+	tt.ReadFrom(&buffer)
+
+	coAuthor, present := tt.CoAuthor()
+	fmt.Println(coAuthor)
+	fmt.Println(present)
+	// Output:
+	// Alice <alice@example.com>
+	// true
+}
+
+func ExampleT_CoAuthor_absent() {
+	tt := New()
+
+	template := `Add secret message`
+	var buffer bytes.Buffer
+	buffer.WriteString(template)
+	tt.ReadFrom(&buffer)
+
+	coAuthor, present := tt.CoAuthor()
+	fmt.Println(coAuthor)
+	fmt.Println(present)
+	// Output:
+	// false
+}
 
 func TestT(t *testing.T) {
 	t.Run("CoAuthor", func(t *testing.T) {
@@ -37,7 +70,7 @@ func TestT(t *testing.T) {
 
 			f, err := os.Open(filepath.Join("testdata", tc.templatePath))
 			if err != nil {
-				log.Fatalf("Missing test data: %s", tc.templatePath)
+				t.Fatalf("Missing test data: %s", tc.templatePath)
 			}
 			tt.ReadFrom(f)
 
