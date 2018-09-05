@@ -39,17 +39,17 @@ func New() *T {
 	return &T{}
 }
 
-type match struct {
-	match    string
+type matched struct {
+	line     string
 	coAuthor string
 }
 
-func author(m [][]string) *match {
+func author(m [][]string) *matched {
 	if m == nil {
 		return nil
 	}
-	return &match{
-		match:    m[0][0],
+	return &matched{
+		line:     m[0][0],
 		coAuthor: m[0][1],
 	}
 }
