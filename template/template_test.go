@@ -2,89 +2,10 @@ package template
 
 import (
 	"bytes"
-	"fmt"
-	"os"
-	"path/filepath"
 	"testing"
 )
 
-func ExampleT_CoAuthor_present() {
-	tt := New()
-
-	template := `Add secret message
-
-  Co-Authored-By: Alice <alice@example.com>`
-	var buffer bytes.Buffer
-	buffer.WriteString(template)
-	tt.ReadFrom(&buffer)
-
-	coAuthor, present := tt.CoAuthor()
-	fmt.Println(coAuthor)
-	fmt.Println(present)
-	// Output:
-	// Alice <alice@example.com>
-	// true
-}
-
-func ExampleT_CoAuthor_absent() {
-	tt := New()
-
-	template := `Add secret message`
-	var buffer bytes.Buffer
-	buffer.WriteString(template)
-	tt.ReadFrom(&buffer)
-
-	coAuthor, present := tt.CoAuthor()
-	fmt.Println(coAuthor)
-	fmt.Println(present)
-	// Output:
-	// false
-}
-
 func TestT(t *testing.T) {
-	t.Run("CoAuthor", func(t *testing.T) {
-		testcases := []struct {
-			templatePath string
-			coAuthor     string
-			present      bool
-		}{
-			{
-				"simple.txt",
-				"Alice <alice@example.com>",
-				true,
-			},
-			{
-				"none.txt",
-				"",
-				false,
-			},
-			{
-				"double.txt", // only one co-author is supported
-				"Alice <alice@example.com>",
-				true,
-			},
-		}
-
-		for _, tc := range testcases {
-			tt := New()
-
-			f, err := os.Open(filepath.Join("testdata", tc.templatePath))
-			if err != nil {
-				t.Fatalf("Missing test data: %s", tc.templatePath)
-			}
-			tt.ReadFrom(f)
-
-			coAuthor, present := tt.CoAuthor()
-			if present != tc.present {
-				t.Errorf("Co-author detection failed for %s", tc.templatePath)
-			}
-			if coAuthor != tc.coAuthor {
-				t.Errorf("Expected co-author to be '%s', was '%s'", tc.coAuthor, coAuthor)
-			}
-		}
-
-	})
-
 	t.Run("ReadFrom", func(t *testing.T) {
 		tt := New()
 
@@ -123,6 +44,19 @@ Further paragraphs come after blank lines.
 
 		if tt.content.String() != expected {
 			t.Errorf("Expected template content to be '%v', got '%v'", expected, tt.content.String())
+		}
+	})
+
+	t.Run("String", func(t *testing.T) {
+		tt := New()
+
+		expected := `A message`
+		var buffer bytes.Buffer
+		buffer.WriteString(expected)
+
+		tt.ReadFrom(&buffer)
+		if tt.String() != expected {
+			t.Errorf("Expected '%s', got '%s'", expected, tt.String())
 		}
 	})
 
