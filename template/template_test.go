@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestT(t *testing.T) {
+func TestGeneric(t *testing.T) {
 	t.Run("ReadFrom", func(t *testing.T) {
 		tt := New()
 

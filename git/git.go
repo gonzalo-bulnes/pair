@@ -9,7 +9,7 @@ import (
 
 // CommitTemplate is a template used for Git commit messages.
 type CommitTemplate struct {
-	template.T
+	*template.Generic
 }
 
 // CoAuthor returns the co-author if any. The second return value indicates
@@ -26,7 +26,7 @@ func (t *CommitTemplate) CoAuthor() (string, bool) {
 // NewCommitTemplate returns a new Git commit template.
 func NewCommitTemplate() *CommitTemplate {
 	return &CommitTemplate{
-		*template.New(),
+		template.New(),
 	}
 }
 
