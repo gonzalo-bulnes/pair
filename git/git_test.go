@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/gonzalo-bulnes/pair/git"
+	"github.com/gonzalo-bulnes/pair/template"
 )
 
 func ExampleCommitTemplate_CoAuthor_present() {
@@ -44,6 +45,10 @@ func ExampleCommitTemplate_CoAuthor_absent() {
 }
 
 func TestCommitTemplate(t *testing.T) {
+	t.Run("implements T", func(t *testing.T) {
+		var _ template.T = (*git.CommitTemplate)(nil)
+	})
+
 	t.Run("CoAuthor", func(t *testing.T) {
 		testcases := []struct {
 			templatePath string

@@ -5,6 +5,12 @@ import (
 	"io"
 )
 
+// T is the interface implemented by all templates
+type T interface {
+	io.ReaderFrom
+	io.WriterTo
+	String() string
+}
 
 // Generic is a generic template, typically a template used for Git commit messages.
 type Generic struct {

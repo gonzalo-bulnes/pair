@@ -6,6 +6,10 @@ import (
 )
 
 func TestGeneric(t *testing.T) {
+	t.Run("implements T", func(t *testing.T) {
+		var _ T = (*Generic)(nil)
+	})
+
 	t.Run("ReadFrom", func(t *testing.T) {
 		tt := New()
 
