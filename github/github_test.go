@@ -2,6 +2,7 @@ package github_test
 
 import (
 	"regexp"
+	"strings"
 	"testing"
 
 	"github.com/gonzalo-bulnes/pair/github"
@@ -52,5 +53,17 @@ func TestCoAuthorRegexp(t *testing.T) {
 				t.Errorf("Unexpected match, expected %v, got %v", tc.matches[i], matches)
 			}
 		}
+	}
+}
+
+func TestCoAuthorPrefix(t *testing.T) {
+	re := regexp.MustCompile(github.CoAuthorRegexp)
+	matches := re.FindAllStringSubmatch(github.CoAuthorPrefix, -1)
+
+	if len(matches) != 1 {
+		t.Fatal("Expected CoAuthorPrefix to match CoAuthorRegexp but didn't")
+	}
+	if strings.TrimSuffix(matches[0][0], matches[0][1]) != github.CoAuthorPrefix {
+		t.Error("Expected CoAuthorPrefix to be exactly matched by CoAuthorRegexp but wasn't")
 	}
 }
