@@ -1,7 +1,9 @@
 package git
 
 import (
+	"bytes"
 	"regexp"
+	"strings"
 
 	"github.com/gonzalo-bulnes/pair/github"
 	"github.com/gonzalo-bulnes/pair/template"
@@ -21,6 +23,26 @@ func (t *CommitTemplate) CoAuthor() (string, bool) {
 		return "", false
 	}
 	return found.coAuthor, true
+}
+
+// AddCoAuthor adds a co-author declaration to the template.
+func (t *CommitTemplate) AddCoAuthor(author string) bool {
+	var coAuthorDeclaration strings.Builder
+	if _, present := t.CoAuthor(); !present {
+		coAuthorDeclaration.WriteString("\n")
+	}
+	coAuthorDeclaration.WriteString(github.CoAuthorPrefix)
+	coAuthorDeclaration.WriteString(author)
+	coAuthorDeclaration.WriteString("\n")
+
+	var buffer bytes.Buffer
+	buffer.WriteString(coAuthorDeclaration.String())
+
+	n, err := t.ReadFrom(&buffer)
+	if err != nil || n != int64(len(coAuthorDeclaration.String())) {
+		return false
+	}
+	return true
 }
 
 // NewCommitTemplate returns a new Git commit template.

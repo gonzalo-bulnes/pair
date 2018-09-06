@@ -49,6 +49,51 @@ func TestCommitTemplate(t *testing.T) {
 		var _ template.T = (*git.CommitTemplate)(nil)
 	})
 
+	t.Run("AddCoAuthor", func(t *testing.T) {
+		testcases := []struct {
+			templatePath string
+			coAuthor     string
+			resultPath   string
+		}{
+			{
+				"none.txt",
+				"Alice <alice@example.com>",
+				"simple.txt",
+			},
+			{
+				"simple.txt",
+				"Bob <bob@example.com>",
+				"double.txt",
+			},
+			// unsupported edge case: co-author lines that are not at the end of the template
+		}
+
+		for _, tc := range testcases {
+			tt := git.NewCommitTemplate()
+
+			f, err := os.Open(filepath.Join("testdata", tc.templatePath))
+			if err != nil {
+				t.Fatalf("Missing test data: %s", tc.templatePath)
+			}
+			tt.ReadFrom(f)
+
+			r, err := os.Open(filepath.Join("testdata", tc.resultPath))
+			if err != nil {
+				t.Fatalf("Missing test data: %s", tc.resultPath)
+			}
+			var result bytes.Buffer
+			result.ReadFrom(r)
+
+			ok := tt.AddCoAuthor(tc.coAuthor)
+			if !ok {
+				t.Error("Failed to add co-author")
+			}
+			if tt.String() != result.String() {
+				t.Errorf("Expected resulting template to be '%s', was '%s'", result.String(), tt.String())
+			}
+		}
+	})
+
 	t.Run("CoAuthor", func(t *testing.T) {
 		testcases := []struct {
 			templatePath string
