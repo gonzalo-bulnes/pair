@@ -45,6 +45,21 @@ func (t *CommitTemplate) AddCoAuthor(author string) bool {
 	return true
 }
 
+// RemoveCoAuthor removes the co-author declaration for author from the template.
+func (t *CommitTemplate) RemoveCoAuthor(author string) bool {
+	var coAuthorDeclaration strings.Builder
+	coAuthorDeclaration.WriteString(github.CoAuthorPrefix)
+	coAuthorDeclaration.WriteString(author)
+	coAuthorDeclaration.WriteString("\n")
+
+	buffer := bytes.NewBufferString(
+		strings.Replace(t.String(), coAuthorDeclaration.String(), "", 1))
+	t.Reset()
+	t.ReadFrom(buffer)
+
+	return true
+}
+
 // NewCommitTemplate returns a new Git commit template.
 func NewCommitTemplate() *CommitTemplate {
 	return &CommitTemplate{

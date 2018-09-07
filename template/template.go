@@ -10,6 +10,7 @@ type T interface {
 	io.ReaderFrom
 	io.WriterTo
 	String() string
+	Reset()
 }
 
 // Generic is a generic template, typically a template used for Git commit messages.
@@ -27,6 +28,11 @@ func (t *Generic) WriteTo(w io.Writer) (n int64, err error) {
 func (t *Generic) ReadFrom(r io.Reader) (n int64, err error) {
 	n, err = t.content.ReadFrom(r)
 	return
+}
+
+// Reset resets the buffer to be empty.
+func (t *Generic) Reset() {
+	t.content.Reset()
 }
 
 // String returns the content of the template as a string.
