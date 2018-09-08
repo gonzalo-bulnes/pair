@@ -43,7 +43,7 @@ Binaries for official releases may be downloaded from the [releases page on GitH
 
 If you want to compile it from source, try:
 
-    $ go get github.com/gonzalo-bulnes/pair
+    $ go get github.com/gonzalo-bulnes/pair/...
 
 For Unix/Linux users, you can install `pair` using the following command. You may want to change the version number in the command below from `v0.1.0` to whichever version you want:
 
