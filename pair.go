@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 
 	"github.com/gonzalo-bulnes/pair/git"
@@ -13,10 +12,21 @@ import (
 
 const version = "0.1.0" // adheres to semantic versioning
 
-// Stop removes the co-author declaration from the commit template.
+// Stop removes the co-author declaration from the commit template, if any.
 func Stop(out, errors io.Writer) error {
-	commitTemplatePath := defaultCommitTemplatePath()
-	ensureExists(commitTemplatePath)
+	commitTemplatePath, _, err := git.GetCommitTemplatePath()
+	if err != nil {
+		switch err.(type) {
+		case *git.NoCommitTemplateConfigurationError:
+			break
+		default:
+			return err
+		}
+	}
+	if commitTemplatePath == "" {
+		return nil
+	}
+
 	config, err := git.NewConfig(commitTemplatePath)
 	if err != nil {
 		return err
@@ -32,6 +42,7 @@ func Stop(out, errors io.Writer) error {
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -41,8 +52,8 @@ func Version(out, errors io.Writer) error {
 	return nil
 }
 
-// With configures Git to use a commit template and adds a co-author declaration
-// to that commit template.
+// With adds a co-author declaration to the current commit template if any,
+// or creates a new commit template and configures Git to use it.
 func With(out, errors io.Writer, pair string) error {
 
 	err := Stop(out, errors)
@@ -50,14 +61,26 @@ func With(out, errors io.Writer, pair string) error {
 		return err
 	}
 
-	commitTemplatePath := defaultCommitTemplatePath()
-	ensureExists(commitTemplatePath)
-	config, err := git.NewConfig(commitTemplatePath)
+	commitTemplatePath, _, err := git.GetCommitTemplatePath()
 	if err != nil {
-		return err
+		if err != nil {
+			switch err.(type) {
+			case *git.NoCommitTemplateConfigurationError:
+				break
+			default:
+				return err
+			}
+		}
 	}
-
-	err = configureGit(commitTemplatePath)
+	if commitTemplatePath == "" {
+		commitTemplatePath = defaultCommitTemplatePath()
+		ensureExists(commitTemplatePath)
+		err = git.SetCommitTemplate(commitTemplatePath)
+		if err != nil {
+			return err
+		}
+	}
+	config, err := git.NewConfig(commitTemplatePath)
 	if err != nil {
 		return err
 	}
@@ -68,19 +91,6 @@ func With(out, errors io.Writer, pair string) error {
 		return err
 	}
 	return nil
-}
-
-func configureGit(template string) (err error) {
-	err = unconfigureGit()
-	if err != nil {
-		return
-	}
-	cmd := exec.Command("git", "config", "--global", "--add", "commit.template", template)
-	err = cmd.Run()
-	if err != nil {
-		return
-	}
-	return
 }
 
 func defaultCommitTemplatePath() string {
@@ -94,11 +104,5 @@ func ensureExists(path string) error {
 			return err
 		}
 	}
-	return nil
-}
-
-func unconfigureGit() error {
-	cmd := exec.Command("git", "config", "--global", "--unset", "commit.template")
-	_ = cmd.Run()
 	return nil
 }

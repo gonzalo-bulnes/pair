@@ -31,6 +31,27 @@ func GetCommitTemplatePath() (path string, global bool, err error) {
 	return
 }
 
+// SetCommitTemplate configures Git locally to use a commit template.
+func SetCommitTemplate(path string) (err error) {
+	err = UnsetCommitTemplate()
+	if err != nil {
+		return
+	}
+	cmd := exec.Command("git", "config", "--add", "commit.template", path)
+	err = cmd.Run()
+	if err != nil {
+		return
+	}
+	return
+}
+
+// UnsetCommitTemplate removes local Git commit template configuration.
+func UnsetCommitTemplate() (err error) {
+	cmd := exec.Command("git", "config", "--unset", "commit.template")
+	err = cmd.Run()
+	return
+}
+
 func commitTemplatePath(output string) (string, error) {
 	re := regexp.MustCompile(commitTemplatePathRegexp)
 	m := re.FindAllStringSubmatch(output, 1)
