@@ -71,15 +71,15 @@ func TestCommitTemplate(t *testing.T) {
 		for _, tc := range testcases {
 			tt := git.NewCommitTemplate()
 
-			f, err := os.Open(filepath.Join("testdata", tc.templatePath))
+			f, err := os.Open(full(tc.templatePath))
 			if err != nil {
-				t.Fatalf("Missing test data: %s", tc.templatePath)
+				t.Fatalf("Missing test data: %s", full(tc.templatePath))
 			}
 			tt.ReadFrom(f)
 
-			r, err := os.Open(filepath.Join("testdata", tc.resultPath))
+			r, err := os.Open(full(tc.resultPath))
 			if err != nil {
-				t.Fatalf("Missing test data: %s", tc.resultPath)
+				t.Fatalf("Missing test data: %s", full(tc.resultPath))
 			}
 			var result bytes.Buffer
 			result.ReadFrom(r)
@@ -116,15 +116,15 @@ func TestCommitTemplate(t *testing.T) {
 		for _, tc := range testcases {
 			tt := git.NewCommitTemplate()
 
-			f, err := os.Open(filepath.Join("testdata", tc.templatePath))
+			f, err := os.Open(full(tc.templatePath))
 			if err != nil {
-				t.Fatalf("Missing test data: %s", tc.templatePath)
+				t.Fatalf("Missing test data: %s", full(tc.templatePath))
 			}
 			tt.ReadFrom(f)
 
-			r, err := os.Open(filepath.Join("testdata", tc.resultPath))
+			r, err := os.Open(full(tc.resultPath))
 			if err != nil {
-				t.Fatalf("Missing test data: %s", tc.resultPath)
+				t.Fatalf("Missing test data: %s", full(tc.resultPath))
 			}
 			var result bytes.Buffer
 			result.ReadFrom(r)
@@ -165,9 +165,9 @@ func TestCommitTemplate(t *testing.T) {
 		for _, tc := range testcases {
 			tt := git.NewCommitTemplate()
 
-			f, err := os.Open(filepath.Join("testdata", tc.templatePath))
+			f, err := os.Open(full(tc.templatePath))
 			if err != nil {
-				t.Fatalf("Missing test data: %s", tc.templatePath)
+				t.Fatalf("Missing test data: %s", full(tc.templatePath))
 			}
 			tt.ReadFrom(f)
 
@@ -180,4 +180,8 @@ func TestCommitTemplate(t *testing.T) {
 			}
 		}
 	})
+}
+
+func full(path string) string {
+	return filepath.Join("testdata", "committemplate", path)
 }
