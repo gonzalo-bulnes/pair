@@ -12,19 +12,22 @@ func TestConfig(t *testing.T) {
 	t.Run("Apply()", func(t *testing.T) {
 		templatePath := full("config", "arbitrary.txt")
 
+		backup, err := backup(templatePath)
+		if err != nil {
+			t.Fatalf("Missing test data: %s", templatePath)
+		}
+		defer func() {
+			err = restore(backup, templatePath)
+			if err != nil {
+				t.Errorf("Could not restore test data: %s", err)
+			}
+		}()
+
 		config, err := git.NewConfig(templatePath)
 		if err != nil {
 			t.Fatalf("Missing test data: %s", templatePath)
 		}
 		config.CommitTemplate.AddCoAuthor("Lewis Caroll <lewis@wonderland.example.io>")
-		defer func() {
-			config, err = git.NewConfig(templatePath)
-			if err != nil {
-				t.Fatalf("Missing test data: %s", templatePath)
-			}
-			config.CommitTemplate.RemoveCoAuthor("Lewis Caroll <lewis@wonderland.example.io>")
-			config.Apply()
-		}()
 		expectedContent := config.CommitTemplate.String()
 		config.Apply()
 
