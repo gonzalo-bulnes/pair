@@ -9,6 +9,38 @@ import (
 )
 
 func TestConfig(t *testing.T) {
+	t.Run("Apply()", func(t *testing.T) {
+		templatePath := full("config", "arbitrary.txt")
+
+		config, err := git.NewConfig(templatePath)
+		if err != nil {
+			t.Fatalf("Missing test data: %s", templatePath)
+		}
+		config.CommitTemplate.AddCoAuthor("Lewis Caroll <lewis@wonderland.example.io>")
+		defer func() {
+			config, err = git.NewConfig(templatePath)
+			if err != nil {
+				t.Fatalf("Missing test data: %s", templatePath)
+			}
+			config.CommitTemplate.RemoveCoAuthor("Lewis Caroll <lewis@wonderland.example.io>")
+			config.Apply()
+		}()
+		expectedContent := config.CommitTemplate.String()
+		config.Apply()
+
+		template, err := os.Open(templatePath)
+		if err != nil {
+			t.Fatalf("Missing test data: %s", templatePath)
+		}
+		var templateContent bytes.Buffer
+		templateContent.ReadFrom(template)
+
+		if templateContent.String() != expectedContent {
+			t.Errorf("Expected template file to contain '%s', instead contains '%s'",
+				expectedContent, templateContent.String())
+		}
+	})
+
 	t.Run("NewConfig()", func(t *testing.T) {
 		t.Run("with wrong path", func(t *testing.T) {
 			_, err := git.NewConfig("missing.txt")

@@ -7,16 +7,28 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/gonzalo-bulnes/pair/git"
 )
 
 const version = "0.1.0" // adheres to semantic versioning
 
 // Stop removes the co-author declaration from the commit template.
 func Stop(out, errors io.Writer) error {
-	template := filepath.Join(os.Getenv("HOME"), ".pair")
+	commitTemplatePath := defaultCommitTemplatePath()
+	ensureExists(commitTemplatePath)
+	config, err := git.NewConfig(commitTemplatePath)
+	if err != nil {
+		return err
+	}
 
-	_ = remove(template)
-	err := unconfigureGit()
+	if author, present := config.CommitTemplate.CoAuthor(); present {
+		ok := config.CommitTemplate.RemoveCoAuthor(author)
+		if !ok {
+			return fmt.Errorf("Unable to remove co-author '%s'", author)
+		}
+	}
+	err = config.Apply()
 	if err != nil {
 		return err
 	}
@@ -32,13 +44,26 @@ func Version(out, errors io.Writer) error {
 // With configures Git to use a commit template and adds a co-author declaration
 // to that commit template.
 func With(out, errors io.Writer, pair string) error {
-	template := filepath.Join(os.Getenv("HOME"), ".pair")
 
-	err := configureGit(template)
+	err := Stop(out, errors)
 	if err != nil {
 		return err
 	}
-	overwrite(template, fmt.Sprintf("\n\nCo-Authored-By: %s\n", pair))
+
+	commitTemplatePath := defaultCommitTemplatePath()
+	ensureExists(commitTemplatePath)
+	config, err := git.NewConfig(commitTemplatePath)
+	if err != nil {
+		return err
+	}
+
+	err = configureGit(commitTemplatePath)
+	if err != nil {
+		return err
+	}
+
+	config.CommitTemplate.AddCoAuthor(pair)
+	err = config.Apply()
 	if err != nil {
 		return err
 	}
@@ -58,27 +83,18 @@ func configureGit(template string) (err error) {
 	return
 }
 
-func overwrite(template, pair string) (err error) {
-	_ = remove(template)
-	f, err := os.OpenFile(template, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return
-	}
-	if _, err = f.Write([]byte(pair)); err != nil {
-		return
-	}
-	if err = f.Close(); err != nil {
-		return
-	}
-	return
+func defaultCommitTemplatePath() string {
+	return filepath.Join(os.Getenv("HOME"), ".pair")
 }
 
-func remove(template string) (err error) {
-	err = os.Remove(template)
-	if err != nil {
-		return err
+func ensureExists(path string) error {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		_, err := os.Create(path)
+		if err != nil {
+			return err
+		}
 	}
-	return
+	return nil
 }
 
 func unconfigureGit() error {
