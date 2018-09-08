@@ -28,9 +28,6 @@ func (t *CommitTemplate) CoAuthor() (string, bool) {
 // AddCoAuthor adds a co-author declaration to the template.
 func (t *CommitTemplate) AddCoAuthor(author string) bool {
 	var coAuthorDeclaration strings.Builder
-	if _, present := t.CoAuthor(); !present {
-		coAuthorDeclaration.WriteString("\n")
-	}
 	coAuthorDeclaration.WriteString(github.CoAuthorPrefix)
 	coAuthorDeclaration.WriteString(author)
 	coAuthorDeclaration.WriteString("\n")

@@ -15,7 +15,7 @@ func ExampleCommitTemplate_CoAuthor_present() {
 
 	template := `Add secret message
 
-  Co-Authored-By: Alice <alice@example.com>`
+Co-Authored-By: Alice <alice@example.com>`
 	var buffer bytes.Buffer
 	buffer.WriteString(template)
 	tt.ReadFrom(&buffer)
@@ -62,7 +62,7 @@ func TestCommitTemplate(t *testing.T) {
 			{
 				"simple.txt",
 				"Bob <bob@example.com>",
-				"double.txt",
+				"double_with_newline.txt",
 			},
 			// unsupported edge case: co-author lines that are not at the end of the template
 		}
@@ -102,12 +102,12 @@ func TestCommitTemplate(t *testing.T) {
 			{
 				"simple.txt",
 				"Alice <alice@example.com>",
-				"none_with_newline.txt",
+				"none.txt",
 			},
 			{
 				"double.txt",
 				"Bob <bob@example.com>",
-				"simple.txt",
+				"simple_without_newline.txt",
 			},
 			// unsupported edge case: template with no co-author declaration
 		}

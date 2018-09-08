@@ -17,7 +17,7 @@ func TestCoAuthorRegexp(t *testing.T) {
 			source: "Some message\n\nCo-Authored-By: Bob <bob@example.com>\n",
 			matches: [][]string{
 				{
-					"Co-Authored-By: Bob <bob@example.com>",
+					"\nCo-Authored-By: Bob <bob@example.com>",
 					"Bob <bob@example.com>",
 				},
 			},
@@ -30,11 +30,11 @@ func TestCoAuthorRegexp(t *testing.T) {
 			source: "Some message\n\nCo-authored-By: Bob <bob@example.com>\nco-Authored-by: Alice <alice@example.com>",
 			matches: [][]string{
 				{
-					"Co-authored-By: Bob <bob@example.com>",
+					"\nCo-authored-By: Bob <bob@example.com>",
 					"Bob <bob@example.com>",
 				},
 				{
-					"co-Authored-by: Alice <alice@example.com>",
+					"\nco-Authored-by: Alice <alice@example.com>",
 					"Alice <alice@example.com>",
 				},
 			},

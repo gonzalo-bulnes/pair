@@ -4,7 +4,7 @@ package github
 
 // CoAuthorRegexp matches Github's co-author declarations and
 // captures the co-authors' names.
-const CoAuthorRegexp = `[Cc]o-[Aa]uthored-[Bb]y: (.*)`
+const CoAuthorRegexp = `\n[Cc]o-[Aa]uthored-[Bb]y: (.*)`
 
 // CoAuthorPrefix starts a co-author declaration.
-const CoAuthorPrefix = `Co-Authored-By: `
+const CoAuthorPrefix = "\nCo-Authored-By: "
