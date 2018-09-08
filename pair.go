@@ -10,7 +10,7 @@ import (
 	"github.com/gonzalo-bulnes/pair/git"
 )
 
-const version = "0.1.0" // adheres to semantic versioning
+const version = "1.0.0-alpha" // adheres to semantic versioning
 
 // Stop removes the co-author declaration from the commit template, if any.
 func Stop(out, errors io.Writer) error {
