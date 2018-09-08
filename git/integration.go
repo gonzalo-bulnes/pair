@@ -2,13 +2,20 @@ package git
 
 import (
 	"bytes"
-	"fmt"
 	"os/exec"
 	"regexp"
 )
 
 const globalConfigOutputRegexp = `file:.git/config`
 const commitTemplatePathRegexp = `config\s+(.*)\s*`
+
+// NoCommitTemplateConfigurationError indicates that commit.template is unset.
+type NoCommitTemplateConfigurationError struct{}
+
+// Error implements the error interface.
+func (e *NoCommitTemplateConfigurationError) Error() string {
+	return "No commit.template configuration found"
+}
 
 // GetCommitTemplatePath returns the current commit.template configuration
 // and whether it provides from global configuration or not.
@@ -28,7 +35,7 @@ func commitTemplatePath(output string) (string, error) {
 	re := regexp.MustCompile(commitTemplatePathRegexp)
 	m := re.FindAllStringSubmatch(output, 1)
 	if m == nil {
-		return "", fmt.Errorf("No commit.template configuration found")
+		return "", &NoCommitTemplateConfigurationError{}
 	}
 	return m[0][1], nil
 }
