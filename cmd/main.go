@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
-	"path/filepath"
 
 	"github.com/gonzalo-bulnes/pair"
 )
@@ -23,9 +21,6 @@ func (e *argumentsError) Error() string {
 }
 
 func main() {
-	home := os.Getenv("HOME")
-	template := filepath.Join(home, ".pair")
-
 	err := checkArgs(os.Args)
 	if e, ok := err.(*argumentsError); ok {
 		fmt.Fprint(os.Stderr, e)
@@ -40,11 +35,8 @@ func main() {
 		_ = pair.With(os.Stdout, os.Stderr, os.Args[2])
 		os.Exit(0)
 	case "stop":
-		_ = remove(template)
-		err := unconfigureGit()
-		if err != nil {
-			return
-		}
+		_ = pair.Stop(os.Stdout, os.Stderr)
+		os.Exit(0)
 	default:
 	}
 }
@@ -60,18 +52,4 @@ func checkArgs(args []string) error {
 		return nil
 	}
 	return &argumentsError{}
-}
-
-func remove(template string) (err error) {
-	err = os.Remove(template)
-	if err != nil {
-		return err
-	}
-	return
-}
-
-func unconfigureGit() error {
-	cmd := exec.Command("git", "config", "--global", "--unset", "commit.template")
-	_ = cmd.Run()
-	return nil
 }

@@ -11,6 +11,18 @@ import (
 
 const version = "0.1.0" // adheres to semantic versioning
 
+// Stop removes the co-author declaration from the commit template.
+func Stop(out, errors io.Writer) error {
+	template := filepath.Join(os.Getenv("HOME"), ".pair")
+
+	_ = remove(template)
+	err := unconfigureGit()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Version prints the package version.
 func Version(out, errors io.Writer) error {
 	fmt.Fprintf(out, fmt.Sprintf("pair version %s\n", version))
