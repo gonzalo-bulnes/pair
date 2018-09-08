@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-)
 
-const Version = "0.1.0"
+	"github.com/gonzalo-bulnes/pair"
+)
 
 type config struct {
 	templateName string
@@ -34,7 +34,7 @@ func main() {
 
 	switch os.Args[1] {
 	case "--version":
-		fmt.Printf("%s\n", version())
+		_ = pair.Version(os.Stdout, os.Stderr)
 		os.Exit(0)
 	case "with":
 		err := configureGit(template)
@@ -109,8 +109,4 @@ func unconfigureGit() error {
 	cmd := exec.Command("git", "config", "--global", "--unset", "commit.template")
 	_ = cmd.Run()
 	return nil
-}
-
-func version() string {
-	return fmt.Sprintf("pair version %s", Version)
 }
