@@ -51,6 +51,20 @@ curl -sL -o /usr/local/bin/pair \
  && chmod +x /usr/local/bin/pair
 ```
 
+Contributing
+------------
+
+[![GoDoc](https://godoc.org/github.com/gonzalo-bulnes/pair?status.svg)](https://godoc.org/github.com/gonzalo-bulnes/pair)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-e7359e.svg?style=popout)](http://makeapullrequest.com)
+
+Whether it is your first pull request or your 100th, the [contributing guidelines][contributing] are here to help you get started!
+
+Please note that by participating in this project, you agree to abide by its [code of conduct]. That is true for pull requests, and also when participating in issues.
+
+  [contributing]: ./CONTRIBUTING.md
+  [code of conduct]: ./CODE_OF_CONDUCT.md
+
+
 Credits
 -------
 
