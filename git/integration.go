@@ -1,3 +1,4 @@
+// Package git provides primitives to manage the Git commit.template configuration.
 package git
 
 import (

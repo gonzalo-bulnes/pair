@@ -1,3 +1,4 @@
+// Package template provides a generic type to represent and manipulate text files.
 package template
 
 import (
@@ -30,7 +31,7 @@ func (t *Generic) ReadFrom(r io.Reader) (n int64, err error) {
 	return
 }
 
-// Reset resets the buffer to be empty.
+// Reset resets the template to be empty.
 func (t *Generic) Reset() {
 	t.content.Reset()
 }

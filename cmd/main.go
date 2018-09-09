@@ -1,7 +1,11 @@
+// Command pair allows to set and manage co-author declarations
+// for seamless pairing sessions using Git and Github.
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/gonzalo-bulnes/pair"
@@ -12,9 +16,7 @@ type config struct {
 	pair         string
 }
 
-type argumentsError struct {
-	message string
-}
+type argumentsError struct{}
 
 func (e *argumentsError) Error() string {
 	return "Usage: pair with <email>\n\nExample:\n\n  pair with 'Alice <alice@example.com>'\n"
@@ -22,9 +24,8 @@ func (e *argumentsError) Error() string {
 
 func main() {
 	err := checkArgs(os.Args)
-	if e, ok := err.(*argumentsError); ok {
-		fmt.Fprint(os.Stderr, e)
-		os.Exit(1)
+	if err != nil {
+		fail(os.Stderr, err, 0)
 	}
 
 	switch os.Args[1] {
@@ -32,10 +33,16 @@ func main() {
 		_ = pair.Version(os.Stdout, os.Stderr)
 		os.Exit(0)
 	case "with":
-		_ = pair.With(os.Stdout, os.Stderr, os.Args[2])
+		err = pair.With(os.Stdout, os.Stderr, os.Args[2])
+		if err != nil {
+			os.Exit(fail(os.Stderr, err, 20))
+		}
 		os.Exit(0)
 	case "stop":
-		_ = pair.Stop(os.Stdout, os.Stderr)
+		err = pair.Stop(os.Stdout, os.Stderr)
+		if err != nil {
+			os.Exit(fail(os.Stderr, err, 21))
+		}
 		os.Exit(0)
 	default:
 	}
@@ -52,4 +59,23 @@ func checkArgs(args []string) error {
 		return nil
 	}
 	return &argumentsError{}
+}
+
+func fail(errors io.Writer, err error, code int) int {
+	if e, ok := err.(*argumentsError); ok {
+		fmt.Fprint(errors, e)
+		return code
+	}
+	var version bytes.Buffer
+	pair.Version(&version, errors)
+
+	fmt.Fprintf(errors, `
+Oh no! You might have found a bug in pair!
+
+Please open an issue mentioning (error %d) and maybe we can pair to fix it : )
+https://github.com/gonzalo-bulnes/pair/issues
+
+%serror: %v
+`, code, version.String(), err)
+	return code
 }
