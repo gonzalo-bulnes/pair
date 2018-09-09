@@ -4,7 +4,7 @@ define GOLANG_CMD
 		--volume "$$(pwd)":/app \
 		--env "GOPATH=/gopath" \
 		--workdir /app \
-		golang:1.9-alpine
+		golang:1.10-alpine
 endef
 
 .PHONY: all
@@ -22,13 +22,13 @@ install-for-testing:
 	go get -t ./...
 	go get github.com/redbubble/go-passe
 
-pair-linux-amd64: *.go
+pair-linux-amd64: *.go **/*.go
 	@${GOLANG_CMD} \
-		sh -c 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a --installsuffix cgo --ldflags="-s" -o pair-linux-amd64'
+		sh -c 'CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a --installsuffix cgo --ldflags="-s" -o pair-linux-amd64 ./cmd'
 
-pair-darwin-amd64: *.go
+pair-darwin-amd64: *.go **/*.go
 	@${GOLANG_CMD} \
-		sh -c 'CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a --installsuffix cgo --ldflags="-s" -o pair-darwin-amd64'
+		sh -c 'CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -a --installsuffix cgo --ldflags="-s" -o pair-darwin-amd64 ./cmd'
 
 .PHONY: test
 test:

@@ -1,48 +1,27 @@
-package main
+package pair_test
 
 import (
+	"bytes"
+	"regexp"
 	"testing"
+
+	"github.com/gonzalo-bulnes/pair"
 )
 
-func TestCheckArgs(t *testing.T) {
-	t.Run("rejects invalid arguments", func(t *testing.T) {
-		knownInvalid := []struct {
-			Description string
-			Args        []string
-		}{
-			{"missing command or option", []string{"pair"}},
-			{"unknown command", []string{"pair", "roneous"}},
-			{"too many arguments for '--version' option", []string{"pair", "--version", "now"}},
-			{"too many arguments for 'with' command", []string{"pair", "with", "mutiple", "people"}},
-			{"not enough arguments for 'with' command", []string{"pair", "with"}},
-			{"too many arguments for 'stop' command", []string{"pair", "stop", "now"}},
-		}
+// semverRegexp matches the most common semantinc version strings.
+// See https://semver.org
+const semverRegexp = `\s\d+.\d+.\d+(?:-(?:alpha|beta|rc)\d*)?\s`
 
-		for _, tc := range knownInvalid {
-			t.Run(tc.Description, func(t *testing.T) {
-				if err := checkArgs(tc.Args); err == nil {
-					t.Errorf("Expected '%s' to be invalid arguments, but were found valid", tc.Args)
-				}
-			})
-		}
-	})
+func TestPair(t *testing.T) {
+	t.Run("Version()", func(t *testing.T) {
 
-	t.Run("accepts valid arguments", func(t *testing.T) {
-		knownInvalid := []struct {
-			Description string
-			Args        []string
-		}{
-			{"'--version' option", []string{"pair", "--version"}},
-			{"'with' command", []string{"pair", "with", "me"}},
-			{"'stop' command", []string{"pair", "stop"}},
+		var out, error bytes.Buffer
+		err := pair.Version(&out, &error)
+		if err != nil {
+			t.Errorf("Unexpected error: %v", err)
 		}
-
-		for _, tc := range knownInvalid {
-			t.Run(tc.Description, func(t *testing.T) {
-				if err := checkArgs(tc.Args); err != nil {
-					t.Errorf("Expected '%s' to be valid arguments, but were found invalid", tc.Args)
-				}
-			})
+		if !regexp.MustCompile(semverRegexp).Match(out.Bytes()) {
+			t.Errorf("Expected (semantic) version to be put out, was not")
 		}
 	})
 }
