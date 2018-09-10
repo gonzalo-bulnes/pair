@@ -49,7 +49,7 @@ func SetCommitTemplate(path string) (err error) {
 // UnsetCommitTemplate removes local Git commit template configuration.
 func UnsetCommitTemplate() (err error) {
 	cmd := exec.Command("git", "config", "--unset", "commit.template")
-	err = cmd.Run()
+	_ = cmd.Run()
 	return
 }
 
