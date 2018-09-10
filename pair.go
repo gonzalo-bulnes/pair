@@ -15,6 +15,7 @@ const version = "1.0.0-alpha" // adheres to semantic versioning
 // Stop removes the co-author declaration from the commit template, if any.
 func Stop(out, errors io.Writer) error {
 	commitTemplatePath, _, err := git.GetCommitTemplatePath()
+	ensureExists(commitTemplatePath)
 	if err != nil {
 		switch err.(type) {
 		case *git.NoCommitTemplateConfigurationError:
