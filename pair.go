@@ -12,9 +12,13 @@ import (
 
 const version = "1.0.0-alpha" // adheres to semantic versioning
 
+func GetGitConnector() git.Connector {
+	return &git.CLI{}
+}
+
 // Stop removes the co-author declaration from the commit template, if any.
-func Stop(out, errors io.Writer) error {
-	commitTemplatePath, _, err := git.GetCommitTemplatePath()
+func Stop(cli git.Connector, out, errors io.Writer) error {
+	commitTemplatePath, _, err := cli.GetCommitTemplatePath()
 	ensureExists(commitTemplatePath)
 	if err != nil {
 		switch err.(type) {
@@ -55,14 +59,14 @@ func Version(out, errors io.Writer) error {
 
 // With adds a co-author declaration to the current commit template if any,
 // or creates a new commit template and configures Git to use it.
-func With(out, errors io.Writer, pair string) error {
+func With(cli git.Connector, out, errors io.Writer, pair string) error {
 
-	err := Stop(out, errors)
+	err := Stop(cli, out, errors)
 	if err != nil {
 		return err
 	}
 
-	commitTemplatePath, _, err := git.GetCommitTemplatePath()
+	commitTemplatePath, _, err := cli.GetCommitTemplatePath()
 	if err != nil {
 		if err != nil {
 			switch err.(type) {
@@ -76,7 +80,7 @@ func With(out, errors io.Writer, pair string) error {
 	if commitTemplatePath == "" {
 		commitTemplatePath = defaultCommitTemplatePath()
 		ensureExists(commitTemplatePath)
-		err = git.SetCommitTemplate(commitTemplatePath)
+		err = cli.SetCommitTemplate(commitTemplatePath)
 		if err != nil {
 			return err
 		}

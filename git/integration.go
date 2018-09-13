@@ -18,14 +18,20 @@ func (e *NoCommitTemplateConfigurationError) Error() string {
 	return "No commit.template configuration found"
 }
 
+// CLI allows to operate the system's Git command-line interface.
+type CLI struct{}
+
 // GetCommitTemplatePath returns the current commit.template configuration
 // and whether it provides from global configuration or not.
-func GetCommitTemplatePath() (path string, global bool, err error) {
+func (cli *CLI) GetCommitTemplatePath() (path string, global bool, err error) {
 	cmd := exec.Command("git", "config", "--show-origin", "--get", "commit.template")
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
-	cmd.Run()
+	err = cmd.Run()
+	if err != nil {
+		return
+	}
 
 	global = isGlobal(out.Bytes())
 	path, err = commitTemplatePath(out.String())
@@ -33,8 +39,8 @@ func GetCommitTemplatePath() (path string, global bool, err error) {
 }
 
 // SetCommitTemplate configures Git locally to use a commit template.
-func SetCommitTemplate(path string) (err error) {
-	err = UnsetCommitTemplate()
+func (cli *CLI) SetCommitTemplate(path string) (err error) {
+	err = cli.UnsetCommitTemplate()
 	if err != nil {
 		return
 	}
@@ -47,7 +53,7 @@ func SetCommitTemplate(path string) (err error) {
 }
 
 // UnsetCommitTemplate removes local Git commit template configuration.
-func UnsetCommitTemplate() (err error) {
+func (cli *CLI) UnsetCommitTemplate() (err error) {
 	cmd := exec.Command("git", "config", "--unset", "commit.template")
 	_ = cmd.Run()
 	return
