@@ -19,13 +19,20 @@ type config struct {
 type argumentsError struct{}
 
 func (e *argumentsError) Error() string {
-	return "Usage: pair with <email>\n\nExample:\n\n  pair with 'Alice <alice@example.com>'\n"
+	return `Usage:
+
+pair with <email>
+Example:
+  pair with 'Alice <alice@example.com>'
+
+pair stop
+`
 }
 
 func main() {
 	err := checkArgs(os.Args)
 	if err != nil {
-		fail(os.Stderr, err, 0)
+		os.Exit(fail(os.Stderr, err, 0))
 	}
 
 	switch os.Args[1] {
