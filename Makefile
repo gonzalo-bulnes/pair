@@ -4,7 +4,7 @@ define GOLANG_CMD
 		--volume "$$(pwd)":/app \
 		--env "GOPATH=/gopath" \
 		--workdir /app \
-		golang:1.10-alpine
+		golang:1.12-alpine
 endef
 
 .PHONY: all
