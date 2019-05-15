@@ -13,7 +13,7 @@ import (
 const version = "1.0.0-alpha" // adheres to semantic versioning
 
 func GetGitConnector() git.Connector {
-	return &git.CLI{}
+	return git.NewCLI()
 }
 
 // Stop removes the co-author declaration from the commit template, if any.
