@@ -7,7 +7,7 @@ import (
 	"regexp"
 )
 
-const globalConfigOutputRegexp = `file:.git/config`
+const globalConfigOutputRegexp = `file:.*\.gitconfig`
 const commitTemplatePathRegexp = `config\s+(.*)\s*`
 
 // NoCommitTemplateConfigurationError indicates that commit.template is unset.
