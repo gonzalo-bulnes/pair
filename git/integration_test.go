@@ -78,6 +78,18 @@ func TestIntegration(t *testing.T) {
 				t.Error("Expected error, got none")
 			}
 		})
+
+		t.Run("when unsetting the template fails", func(t *testing.T) {
+			cli := NewCLI()
+			cli.unsetCommitTemplate = func() error {
+				return errors.New("Git command failed")
+			}
+
+			err := cli.SetCommitTemplate("path")
+			if err != nil {
+				t.Errorf("Expected no error, got %+v", err)
+			}
+		})
 	})
 
 	t.Run("UnsetCommitTemplate()", func(t *testing.T) {
