@@ -15,7 +15,8 @@ build: pair-linux-amd64 pair-darwin-amd64
 
 .PHONY: clean
 clean:
-	@rm -f pair
+	@rm -f pair-linux-amd64
+	@rm -f pair-darwin-amd64
 
 .PHONY: install-for-testing
 install-for-testing:
