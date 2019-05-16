@@ -35,18 +35,20 @@ func main() {
 		os.Exit(fail(os.Stderr, err, 0))
 	}
 
+	git := pair.GetGitConnector()
+
 	switch os.Args[1] {
 	case "--version":
 		_ = pair.Version(os.Stdout, os.Stderr)
 		os.Exit(0)
 	case "with":
-		err = pair.With(os.Stdout, os.Stderr, os.Args[2])
+		err = pair.With(git, os.Stdout, os.Stderr, os.Args[2])
 		if err != nil {
 			os.Exit(fail(os.Stderr, err, 20))
 		}
 		os.Exit(0)
 	case "stop":
-		err = pair.Stop(os.Stdout, os.Stderr)
+		err = pair.Stop(git, os.Stdout, os.Stderr)
 		if err != nil {
 			os.Exit(fail(os.Stderr, err, 21))
 		}
