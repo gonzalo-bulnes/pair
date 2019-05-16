@@ -10,7 +10,7 @@ import (
 	"github.com/gonzalo-bulnes/pair/git"
 )
 
-const version = "1.0.0-alpha" // adheres to semantic versioning
+const version = "1.0.0-alpha2" // adheres to semantic versioning
 
 func GetGitConnector() git.Connector {
 	return git.NewCLI()

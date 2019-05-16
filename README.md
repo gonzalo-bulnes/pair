@@ -43,11 +43,11 @@ If you want to compile it from source, try:
 go get github.com/gonzalo-bulnes/pair/...
 ```
 
-For Unix/Linux users, you can install `pair` using the following command. You may want to change the version number in the command below from `v1.0.0-alpha` to whichever version you want:
+For Unix/Linux users, you can install `pair` using the following command. You may want to change the version number in the command below from `v1.0.0-alpha2` to whichever version you want:
 
 ```bash
 curl -sL -o /usr/local/bin/pair \
-    https://github.com/gonzalo-bulnes/pair/releases/download/v1.0.0-alpha/pair-linux-amd64 \
+    https://github.com/gonzalo-bulnes/pair/releases/download/v1.0.0-alpha2/pair-linux-amd64 \
  && chmod +x /usr/local/bin/pair
 ```
 
