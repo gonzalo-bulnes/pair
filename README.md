@@ -64,6 +64,12 @@ Please note that by participating in this project, you agree to abide by its [co
   [contributing]: ./CONTRIBUTING.md
   [code of conduct]: ./CODE_OF_CONDUCT.md
 
+Similar projects
+----------------
+
+You might also want to check [**git-pair**](https://github.com/thechutrain/git-pair), an independent project that seems similar in spirit to [the approach proposed in #12](https://github.com/gonzalo-bulnes/pair/issues/12). Also written in Go, it might be a nice opportunity to see different approaches to the same problem!
+
+Made by fine people at the [Recurse Center](https://www.recurse.com), the more the merrier! 🐙
 
 Credits
 -------
